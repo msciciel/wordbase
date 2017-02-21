@@ -1,5 +1,6 @@
 FROM python:3.5
 ENV PYTHONUNBUFFERED 1
+RUN apt-get update ; apt-get -y install mysql-client; apt-get clean
 RUN mkdir /code
 WORKDIR /code
 ADD requirements.txt /code/
