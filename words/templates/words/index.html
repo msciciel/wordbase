@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if words_list %}
+        <h1>Known words in database: {{ word_list.count }}</h1>
+        <ul>
+        {% for word in words_list %}
+            <li><a href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No words are added to database.</p>
+    {% endif %}
+    <form action="{% url 'words:parse' %}" method="get">
+    <input type="submit" value="Parse text">
+    </form>
+
+
+    <form action="{% url 'words:logout' %}" method="get">
+    <input type="submit" value="Logout">
+    </form>
+{% endblock content %}

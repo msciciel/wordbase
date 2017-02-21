@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Extracted words:</h1>
+
+    {% if words %}
+    <h3>Mark known words from {{ words|length }} new words</h3>
+    <form action="{% url 'words:save' %}" method="post">
+    {% csrf_token %}
+    <ul>
+        {% for word, line in words.items %}
+            <li><input type="checkbox" name="words" value="{{ word }}"/>{{ word }} ({{ line }})</li>
+        {% endfor %}
+    </ul>
+    <input type="submit" value="Save" />
+    </form>
+    {% else %}
+    No new words were found !
+    <form action="{% url 'words:parse' %}" method="get">
+    <input type="submit" value="Parse text">
+    </form>
+    {% endif %}
+{% endblock content %}

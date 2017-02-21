@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Saved words:</h1>
+    {% if words %}
+    <ul>
+        {% for word in words %}
+        <li>{{ word }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    No new known words were found !
+    {% endif %}
+
+    <form action="{% url 'words:index' %}" method="get">
+    <input type="submit" value="Words list">
+    </form>
+{% endblock content %}

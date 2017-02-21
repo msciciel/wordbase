@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ word.word_text }}</h1>
+    <h3>Added: {{ word.add_date }}</h3>
+
+    <form action="{% url 'words:index' %}" method="get">
+    <input type="submit" value="Words list">
+    </form>
+{% endblock content %}
