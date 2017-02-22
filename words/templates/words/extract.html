@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+    <script>
+    $(document).ready(function(){
+        $("#select_all").click(function() {
+            $(".checkbox").prop('checked', 'checked');
+        });
+    });
+    </script>
+
     <h1>Extracted words:</h1>
 
     {% if words %}
@@ -8,15 +16,17 @@
     {% csrf_token %}
     <ul>
         {% for word, line in words.items %}
-            <li><input type="checkbox" name="words" value="{{ word }}"/>{{ word }} ({{ line }})</li>
+            <li><input class="checkbox" type="checkbox" name="words" value="{{ word }}"/>{{ word }} ({{ line }})</li>
         {% endfor %}
     </ul>
+    <input type="button" id="select_all" value="Select All" />
     <input type="submit" value="Save" />
     </form>
     {% else %}
     No new words were found !
     <form action="{% url 'words:parse' %}" method="get">
-    <input type="submit" value="Parse text">
+    <input type="submit" value="Parse text" />
     </form>
     {% endif %}
 {% endblock content %}
+
