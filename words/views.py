@@ -3,14 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 
-from .models import Word
+from .models import Word, User
 
 import re
 
 
 @login_required
 def index(request):
-    words_list = Word.objects.order_by('word_text')
+    user = User.objects.get(username=request.user)
+    words_list = user.words.all().order_by('word_text')
     context = {
         'words_list': words_list,
     }
@@ -33,6 +34,7 @@ def parse(request):
 
 @login_required
 def extract(request):
+    user = User.objects.get(username=request.user)
     try:
         text = request.POST['text']
     except KeyError:
@@ -45,10 +47,10 @@ def extract(request):
 
         for line in text.split('\n'):
             for item in [w.lower() for w in line.split()]:
-                m = re.match('^[,.("]?(?P<word>[a-z]+-?[a-z]{2,})[,.)"]?$', item)
+                m = re.match('^[,.("]*(?P<word>[a-z]+-?[a-z]{2,})[,.)"]*$', item)
                 if m:
                     word = m.group('word')
-                    if word not in words and not Word.objects.filter(word_text=word).exists():
+                    if word not in words and not user.words.filter(word_text=word).exists():
                         words.update({
                             word: line
                         })
@@ -62,15 +64,17 @@ def extract(request):
 
 @login_required
 def save(request):
+    user = User.objects.get(username=request.user)
     try:
         words = request.POST.getlist('words')
     except KeyError:
         return render(request, 'words/save.html')
     else:
         context = {
-            'words': words
+            'words': []
         }
         for word in words:
-            Word.objects.create(word_text=word, add_date=timezone.now()).save()
-
+            if not user.words.filter(word_text=word).exists():
+                user.words.update_or_create(word_text=word, add_date=timezone.now())
+                context['words'].append(word)
         return render(request, 'words/save.html', context)
