@@ -69,6 +69,7 @@ class WordsViewIndexTests(TestCase):
         self.client.login(**credentials)
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Known words in database: 2")
         self.assertContains(response, "word1")
         self.assertContains(response, "word2")
         self.assertQuerysetEqual(response.context['words_list'], ['<Word: word1>', '<Word: word2>'])
@@ -195,3 +196,4 @@ class WordsViewIndexTests(TestCase):
             response.context['words_list'],
             ['<Word: {}>'.format(w) for w in sorted(words)]
         )
+        self.assertContains(response, "Known words in database: {}".format(len(words)))

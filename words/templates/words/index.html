@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     {% if words_list %}
-        <h1>Known words in database: {{ word_list.count }}</h1>
+        <h1>Known words in database: {{ words_list.count }}</h1>
         <ul>
         {% for word in words_list %}
             <li><a href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a></li>
