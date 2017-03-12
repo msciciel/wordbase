@@ -1,12 +1,18 @@
-<html>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
 
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-
-</body>
-</html>
+    <div class="col-xs-12 col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4">
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        {% csrf_token %}
+        <label for="id_username" class="sr-only">Username</label>
+        <input type="username" id="id_username" name="username" class="form-control" placeholder="Username" required
+          autofocus>
+        <label for="id_password" class="sr-only">Password</label>
+        <input type="password" id="id_password" name="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
+    </div>
+{% endblock content %}

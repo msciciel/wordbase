@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
     <h1>Paste text to parse:</h1>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -9,3 +10,7 @@
         <input type="submit" value="Parse" />
     </form>
 {% endblock content %}
+
+{% block parse %}
+    <li class="active"><a href="{% url 'words:parse' %}">Parse text</a></li>
+{% endblock parse %}

@@ -1,14 +1,46 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
         <title>Words learning</title>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-			    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-			    crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'words/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'words/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'words/style.css' %}" rel="stylesheet" media="screen">
     </head>
     <body>
-        {% block content %}
-            If you see this, something is wrong!
-        {% endblock content %}
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <h4 class="navbar-text">Wordbase</h4>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+                {% block index %}<li><a href="{% url 'words:index' %}">Words</a></li>{% endblock index %}
+                {% block parse %}<li><a href="{% url 'words:parse' %}">Parse text</a></li>{% endblock parse %}
+                <li><a href="{% url 'words:logout' %}">Logout</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div class="container">
+            <div class="content">
+                {% block content %}
+                    If you see this, something is wrong!
+                {% endblock content %}
+            </div>
+        </div>
+
+        <script src="{% static 'words/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'words/bootstrap/js/bootstrap.min.js' %}"></script>
     </body>
 </html>
