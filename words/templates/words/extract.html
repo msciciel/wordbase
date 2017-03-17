@@ -1,26 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-    <script>
-    $(document).ready(function(){
-        $("#select_all").click(function() {
-            $(".checkbox").prop('checked', 'checked');
-        });
-    });
-    </script>
+  <script>
+      $(document).ready(function(){
+          $("#select_all").on('click', function() {
+              $(".checkbox").prop('checked', true);
+          });
+      });
+  </script>
 
-    <h1>Extracted words:</h1>
-
-    {% if words %}
-    <h3>Mark known words from {{ words|length }} new words</h3>
+  {% if words %}
+    <h3><span class="label label-default">Mark known words from {{ words|length }} new words</span></h3>
     <form action="{% url 'words:save' %}" method="post">
     {% csrf_token %}
-    <ul>
+      <table class="table table-bordered">
+        <tr>
+          <th>#</th>
+          <th>Known</th>
+          <th>Word</th>
+          <th>Line</th>
+        </tr>
         {% for word, line in words.items %}
-            <li><input class="checkbox" type="checkbox" name="words" value="{{ word }}"/>{{ word }} ({{ line }})</li>
-        {% endfor %}
-    </ul>
-    <input type="button" id="select_all" value="Select All" />
-    <input type="submit" value="Save" />
+        <tr>
+          <td class="text-left">{{ forloop.counter }}</td>
+          <td class="text-left"><input class="checkbox" type="checkbox" name="words" value="{{ word }}"/></td>
+          <td class="text-left">{{ word }}</td>
+          <td class="text-left">{{ line }}</td>
+        </tr>
+      {% endfor %}
+      </table>
+    <button type="button" class="btn btn-primary" id="select_all">Select All</button>
+    <button type="submit" class="btn btn-primary">Save</button>
     </form>
     {% else %}
     No new words were found !
@@ -30,3 +39,6 @@
     {% endif %}
 {% endblock content %}
 
+{% block parse %}
+  <li class="active"><a href="{% url 'words:parse' %}">Parse text</a></li>
+{% endblock parse %}

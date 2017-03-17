@@ -35,14 +35,13 @@ def parse(request):
 @login_required
 def extract(request):
     user = User.objects.get(username=request.user)
-    try:
-        text = request.POST['text']
-    except KeyError:
+    if 'text' not in request.POST or not request.POST['text']:
         context = {
-            'error_message': "You didn't provide text data."
+            'error_message': "Text input was empty !"
         }
         return render(request, 'words/parse.html', context)
     else:
+        text = request.POST['text']
         words = {}
 
         for line in text.split('\n'):

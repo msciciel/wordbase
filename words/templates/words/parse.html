@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Paste text to parse:</h1>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+  {% if error_message %}<div class="alert alert-danger">{{ error_message }}</div>{% endif %}
 
-    <form action="{% url 'words:extract' %}" method="post">
-        {% csrf_token %}
-        <textarea name="text" rows="16" cols="80"></textarea><br/>
-        <input type="submit" value="Parse" />
-    </form>
+  <h3><span class="label label-default">Text to parse</span></h3>
+  <form action="{% url 'words:extract' %}" method="post">
+    <div class="form-group">
+      <textarea name="text" class="form-control" autofocus="autofocus" placeholder="text" id="text" rows="16"
+                cols="80"></textarea><br/>
+    </div>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Parse</button>
+  </form>
 {% endblock content %}
 
 {% block parse %}
-    <li class="active"><a href="{% url 'words:parse' %}">Parse text</a></li>
+  <li class="active"><a href="{% url 'words:parse' %}">Parse text</a></li>
 {% endblock parse %}

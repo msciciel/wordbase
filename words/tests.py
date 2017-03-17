@@ -85,8 +85,8 @@ class WordsViewIndexTests(TestCase):
         self.client.login(**credentials)
         response = self.client.get(reverse('words:parse'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Paste text to parse:")
-        self.assertContains(response, '<form action="/words/extract/" method="post">')
+        self.assertContains(response, "Text to parse")
+        self.assertContains(response, '<form action="{}" method="post">'.format(reverse('words:extract')))
 
     def test_exract_view_with_empty_text(self):
         """
@@ -99,8 +99,7 @@ class WordsViewIndexTests(TestCase):
         self.client.login(**credentials)
         response = self.client.post(reverse('words:extract'), {'text': ''})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Extracted words:")
-        self.assertContains(response, "No new words were found !")
+        self.assertContains(response, "Text input was empty !")
 
     def test_exract_view_with_only_new_words_text(self):
         """
@@ -121,7 +120,7 @@ class WordsViewIndexTests(TestCase):
         ])
         response = self.client.post(reverse('words:extract'), {'text': text})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Extracted words:")
+        self.assertContains(response, "Mark known words")
         new_words = sorted(list(response.context['words'].keys()))
         self.assertListEqual(new_words, words)
 
@@ -147,9 +146,10 @@ class WordsViewIndexTests(TestCase):
         ])
         response = self.client.post(reverse('words:extract'), {'text': text})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Extracted words:")
+        self.assertContains(response, "Mark known words")
         new_words = sorted(list(response.context['words'].keys()))
         self.assertListEqual(new_words, words)
+        self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:parse')))
 
     def test_save_view_with_only_new_words(self):
         """
@@ -162,12 +162,13 @@ class WordsViewIndexTests(TestCase):
         words = ['the', 'court', 'said', 'case', 'him', 'dismissed', 'and']
         response = self.client.post(reverse('words:save'), {'words': words})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Saved words:")
+        self.assertContains(response, "Saved words")
         self.assertListEqual(sorted(response.context['words']), sorted(words))
         self.assertQuerysetEqual(
             user.words.all().order_by('word_text'),
             ['<Word: {}>'.format(w) for w in sorted(words)]
         )
+        self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:parse')))
 
     def test_save_view_with_mixed_new_words(self):
         """
@@ -185,8 +186,9 @@ class WordsViewIndexTests(TestCase):
         new_words.remove('him')
         response = self.client.post(reverse('words:save'), {'words': words})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Saved words:")
+        self.assertContains(response, "Saved words")
         self.assertListEqual(sorted(response.context['words']), sorted(new_words))
+        self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:parse')))
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
@@ -197,3 +199,19 @@ class WordsViewIndexTests(TestCase):
             ['<Word: {}>'.format(w) for w in sorted(words)]
         )
         self.assertContains(response, "Known words in database: {}".format(len(words)))
+
+    def test_detail_view_with_existing_word(self):
+        """
+        Detail page should show information about word.
+        """
+        credentials = {'username': 'student', 'password': 'student'}
+        user = create_user(**credentials)
+        word = create_word('exampleword')
+        user.words.add(word)
+        user.save()
+
+        self.client.login(**credentials)
+        response = self.client.get(reverse('words:detail', kwargs={'word_id': word.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, word.word_text)
+        self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:index')))

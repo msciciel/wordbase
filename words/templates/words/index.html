@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if words_list %}
-        <h1>Known words in database: {{ words_list.count }}</h1>
-        <ul>
-        {% for word in words_list %}
-            <li><a href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No words are added to database.</p>
-    {% endif %}
+  {% if words_list %}
+    <h2><span class="label label-default">Known words in database: {{ words_list.count }}</span></h2>
+    <p>
+      {% for word in words_list %}
+        <a class="label label-info" href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a>
+      {% endfor %}
+    </p>
+  {% else %}
+    <p>No words are added to database.</p>
+  {% endif %}
 {% endblock content %}
 
 {% block index %}
-    <li class="active"><a href="{% url 'words:index' %}">Words</a></li>
+  <li class="active"><a href="{% url 'words:index' %}">Words</a></li>
 {% endblock index %}
