@@ -2,7 +2,10 @@
 
 {% block content %}
   {% if words_list %}
-    <h2><span class="label label-default">Known words in database: {{ words_list.count }}</span></h2>
+    <h3>
+      <span class="label label-default">Known words</span>
+      <span class="label label-success">{{ words_list.count }}</span>
+    </h3>
     <p>
       {% for word in words_list %}
         <a class="label label-info" href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a>

@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2><span class="label label-default">Saved words</span></h2>
   {% if words %}
+    <h2>
+      <span class="label label-default">Saved words</span>
+      <span class="label label-success">{{ words|length }}</span>
+    </h2>
+
     <p>
       {% for word in words %}
-        <span class="label label-success">{{ word }}</span>
+        <span class="label label-info">{{ word }}</span>
       {% endfor %}
     </p>
   {% else %}

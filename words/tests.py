@@ -69,7 +69,8 @@ class WordsViewIndexTests(TestCase):
         self.client.login(**credentials)
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Known words in database: 2")
+        self.assertContains(response, '<span class="label label-success">{}</span>'.format(2))
+        self.assertContains(response, '<span class="label label-default">Known words</span>')
         self.assertContains(response, "word1")
         self.assertContains(response, "word2")
         self.assertQuerysetEqual(response.context['words_list'], ['<Word: word1>', '<Word: word2>'])
@@ -169,6 +170,7 @@ class WordsViewIndexTests(TestCase):
             ['<Word: {}>'.format(w) for w in sorted(words)]
         )
         self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:parse')))
+        self.assertContains(response, '<span class="label label-success">{}</span>'.format(len(words)))
 
     def test_save_view_with_mixed_new_words(self):
         """
@@ -189,6 +191,7 @@ class WordsViewIndexTests(TestCase):
         self.assertContains(response, "Saved words")
         self.assertListEqual(sorted(response.context['words']), sorted(new_words))
         self.assertContains(response, '<li class="active"><a href="{}">'.format(reverse('words:parse')))
+        self.assertContains(response, '<span class="label label-success">{}</span>'.format(len(new_words)))
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
@@ -198,7 +201,7 @@ class WordsViewIndexTests(TestCase):
             response.context['words_list'],
             ['<Word: {}>'.format(w) for w in sorted(words)]
         )
-        self.assertContains(response, "Known words in database: {}".format(len(words)))
+        self.assertContains(response, '<span class="label label-success">{}</span>'.format(len(words)))
 
     def test_detail_view_with_existing_word(self):
         """

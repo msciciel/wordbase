@@ -3,14 +3,15 @@
 {% block content %}
   {% if error_message %}<div class="alert alert-danger">{{ error_message }}</div>{% endif %}
 
-  <h3><span class="label label-default">Text to parse</span></h3>
+  <h2><span class="label label-default">Text to parse</span></h2>
+
   <form action="{% url 'words:extract' %}" method="post">
+    {% csrf_token %}
     <div class="form-group">
       <textarea name="text" class="form-control" autofocus="autofocus" placeholder="text" id="text" rows="16"
                 cols="80"></textarea><br/>
     </div>
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Parse</button>
+    <button type="submit" class="btn btn-info">Parse</button>
   </form>
 {% endblock content %}
 
